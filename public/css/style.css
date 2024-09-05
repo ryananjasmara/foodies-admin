@@ -1,0 +1,97 @@
+.header {
+    background-color: #4d8cecbb;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+.admin-info {
+    display: inline-flex;
+    align-items: center;
+}
+
+.admin-info .btn {
+    margin-left: 10px;
+}
+
+.admin-info .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.admin-info .dropdown-toggle::after {
+    display: none;
+}
+
+.admin-info .dropdown-toggle {
+    cursor: pointer;
+}
+
+.sidebar {
+    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #146becaf;
+    color: #000;
+    padding-top: 60px;
+}
+
+.sidebar-header {
+    padding: 10px;
+}
+
+.sidebar-header .app-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #146becaf;
+    padding: 10px;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+}
+
+.sidebar-header .app-title i {
+    margin-right: 10px;
+}
+
+.sidebar .nav-link {
+    color: #ffffff;
+    padding: 10px 15px;
+    font-size: 1rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #ffffff;
+    color: #000;
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+}
+
+.table-light-blue {
+    background-color: #e3f2fd;
+}
+
+.table-light-blue th,
+.table-light-blue td {
+    background-color: #e3f2fd;
+}
+
+.table-light-blue thead th {
+    background-color: #146becaf;
+    color: #ffffff;
+}
+
+.table-light-blue tbody tr:hover {
+    background-color: #90caf9;
+}
+
+.product-image {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
