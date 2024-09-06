@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -46,6 +47,16 @@ Route::middleware(['auth:admin'])->group(function () {
 
     // order routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.list');
+    Route::post('/orders', [OrderController::class, 'create'])->name('orders.create');
+    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{id}', [OrderController::class, 'delete'])->name('orders.delete');
     Route::get('/orders/export', [OrderController::class, 'export'])->name('orders.export');
+
+    // role routes
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.list');
+    Route::post('/roles', [RoleController::class, 'create'])->name('roles.create');
+    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{id}', [RoleController::class, 'delete'])->name('roles.delete');
+    Route::get('roles/{id}/permissions', [RoleController::class, 'getPermissions'])->name('roles.permissions');
 });
 

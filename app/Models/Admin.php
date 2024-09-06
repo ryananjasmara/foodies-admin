@@ -10,11 +10,21 @@ class Admin extends Authenticatable
         'username',
         'password',
         'name',
-        'role',
+        'role_id',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->role && $this->role->permissions->contains('name', $permission);
+    }
 }

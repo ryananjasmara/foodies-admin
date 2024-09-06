@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Product List')
+@section('title', 'Foodies Admin - Product List')
 
 @section('content')
 <div class="container mt-5">
@@ -10,9 +10,11 @@
             <li class="breadcrumb-item active" aria-current="page">Product List</li>
         </ol>
     </nav>
-    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createProductModal">
-        Create New Product
-    </button>
+    @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('create_products'))
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createProductModal">
+            Create New Product
+        </button>
+    @endif
     <table class="table table-bordered table-hover table-light-blue">
         <thead class="thead-light">
             <tr>
@@ -22,7 +24,9 @@
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Image</th>
-                <th>Actions</th>
+                @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('edit_products') || (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('delete_products')))
+                    <th>Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -37,18 +41,24 @@
                         <img src="{{ $product->image_url }}" alt="Product Image" class="img-thumbnail product-image"
                             width="50" height="50" onclick="showImageModal('{{ $product->image_url }}')">
                     </td>
-                    <td>
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                            data-target="#editProductModal" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                            data-type="{{ $product->type }}" data-qty="{{ $product->qty }}"
-                            data-price="{{ $product->price }}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#deleteProductModal" data-id="{{ $product->id }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
+                    @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('edit_products') || (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('delete_products')))
+                        <td>
+                            @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('edit_products'))
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                    data-target="#editProductModal" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                    data-type="{{ $product->type }}" data-qty="{{ $product->qty }}"
+                                    data-price="{{ $product->price }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            @endif
+                            @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('delete_products'))
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#deleteProductModal" data-id="{{ $product->id }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            @endif
+                        </td>
+                    @endif
                 </tr>
             @empty
                 <tr>

@@ -1,0 +1,22 @@
+body,
+html {
+    height: 100%;
+}
+
+.container {
+    height: 100%;
+}
+
+.card-header {
+    padding: 10px;
+}
+
+.card-header .app-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: #146becaf;
+    padding: 10px;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+}

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
@@ -15,11 +16,15 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        Admin::create([
-            'username' => 'admin',
-            'password' => Hash::make('password'),
-            'name' => 'Foodies Super Admin',
-            'role' => 'Super Admin',
-        ]);
+        $role = Role::where('name', 'Admin')->first();
+
+        if ($role) {
+            Admin::create([
+                'username' => 'admin',
+                'password' => Hash::make('password'),
+                'name' => 'Foodies Super Admin',
+                'role_id' => $role->id,
+            ]);
+        }
     }
 }

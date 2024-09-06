@@ -1,14 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Foodies Admin - Dashboard')
 
 @section('content')
 <div class="container mt-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-        </ol>
-    </nav>
     <div class="row">
         <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">

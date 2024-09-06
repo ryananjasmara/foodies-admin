@@ -73,11 +73,9 @@ class ProductController extends Controller
                 $product->image = $imagePath;
             }
 
-            if ($product->save()) {
-                return redirect()->route('products.list')->with('success', 'Product updated successfully.');
-            } else {
-                return redirect()->route('products.list')->with('error', 'Failed to update product.');
-            }
+            $product->save();
+            
+            return redirect()->route('products.list')->with('success', 'Product updated successfully.');
         } catch (ModelNotFoundException $e) {
             Log::error('Product not found: ' . $e->getMessage());
             return redirect()->route('products.list')->with('error', 'Product not found.');

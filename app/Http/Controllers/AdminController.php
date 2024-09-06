@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,7 +15,9 @@ class AdminController extends Controller
     public function index()
     {
         $admins = Admin::all();
-        return view('admins', compact('admins'));
+        $roles = Role::all();
+
+        return view('admins', compact('admins', 'roles'));
     }
 
     public function create(Request $request)
@@ -24,14 +27,14 @@ class AdminController extends Controller
                 'username' => 'required|string|max:255|unique:admins',
                 'password' => 'required|string',
                 'name' => 'required|string|max:255',
-                'role' => 'required|string|max:255',
+                'role_id' => 'required|integer',
             ]);
 
             Admin::create([
                 'username' => $request->username,
                 'password' => Hash::make($request->password),
                 'name' => $request->name,
-                'role' => $request->role,
+                'role_id' => $request->role_id,
             ]);
 
             return redirect()->route('admins.list')->with('success', 'Admin created successfully.');
@@ -51,13 +54,13 @@ class AdminController extends Controller
             $request->validate([
                 'username' => 'required|string|max:255|unique:admins,username,' . $admin->id,
                 'name' => 'required|string|max:255',
-                'role' => 'required|string|max:255',
+                'role_id' => 'required|integer',
                 'password' => 'nullable|string',
             ]);
 
             $admin->username = $request->username;
             $admin->name = $request->name;
-            $admin->role = $request->role;
+            $admin->role_id = $request->role_id;
             if ($request->password) {
                 $admin->password = Hash::make($request->password);
             }

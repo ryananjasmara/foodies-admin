@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'User List')
+@section('title', 'Foodies Admin - User List')
 
 @section('content')
 <div class="container mt-5">
@@ -10,16 +10,20 @@
             <li class="breadcrumb-item active" aria-current="page">User List</li>
         </ol>
     </nav>
-    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">
-        Create New User
-    </button>
+    @if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->hasPermission('create_users'))
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">
+            Create New User
+        </button>
+    @endif
     <table class="table table-bordered table-hover table-light-blue">
         <thead class="thead-light">
             <tr>
                 <th>ID</th>
                 <th>Username</th>
                 <th>Name</th>
-                <th>Actions</th>
+                @if (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->hasPermission('edit_users') || Auth::guard('admin')->user()->hasPermission('delete_users')))
+                    <th>Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -28,17 +32,24 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->name }}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                            data-target="#editUserModal" data-id="{{ $user->id }}" data-username="{{ $user->username }}"
-                            data-name="{{ $user->name }}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#deleteUserModal" data-id="{{ $user->id }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
+                    @if (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->hasPermission('edit_users') || Auth::guard('admin')->user()->hasPermission('delete_users')))
+                        <td>
+                            @if (Auth::guard('admin')->user()->hasPermission('edit_users'))
+                                <a href="{{ route('users.update', $user->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            @endif
+                            @if (Auth::guard('admin')->user()->hasPermission('delete_users'))
+                                <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
+                    @endif
                 </tr>
             @empty
                 <tr>
@@ -104,7 +115,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-password">Password</label>
-                        <input type="password" class="form-control" id="edit-password" name="password" autocomplete="new-password">
+                        <input type="password" class="form-control" id="edit-password" name="password"
+                            autocomplete="new-password">
                     </div>
                     <div class="mb-3">
                         <label for="edit-name">Name</label>

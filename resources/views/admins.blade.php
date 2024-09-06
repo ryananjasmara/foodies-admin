@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Admin List')
+@section('title', 'Foodies Admin - Admin List')
 
 @section('content')
 <div class="container mt-5">
@@ -10,9 +10,11 @@
             <li class="breadcrumb-item active" aria-current="page">Admin List</li>
         </ol>
     </nav>
-    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createAdminModal">
-        Create New Admin
-    </button>
+    @if (Auth::guard('admin')->user()->hasPermission('create_admins'))
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createAdminModal">
+            Create New Admin
+        </button>
+    @endif
     <table class="table table-bordered table-hover table-light-blue">
         <thead class="thead-light">
             <tr>
@@ -20,7 +22,9 @@
                 <th>Username</th>
                 <th>Name</th>
                 <th>Role</th>
-                <th>Actions</th>
+                @if (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->hasPermission('edit_admins') || Auth::guard('admin')->user()->hasPermission('delete_admins')))
+                    <th>Actions</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -29,18 +33,24 @@
                     <td>{{ $admin->id }}</td>
                     <td>{{ $admin->username }}</td>
                     <td>{{ $admin->name }}</td>
-                    <td>{{ $admin->role }}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                            data-target="#editAdminModal" data-id="{{ $admin->id }}" data-username="{{ $admin->username }}"
-                            data-name="{{ $admin->name }}" data-role="{{ $admin->role }}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#deleteAdminModal" data-id="{{ $admin->id }}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
+                    <td>{{ $admin->role->name }}</td>
+                    @if (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->hasPermission('edit_admins') || Auth::guard('admin')->user()->hasPermission('delete_admins')))
+                        <td>
+                            @if (Auth::guard('admin')->user()->hasPermission('edit_admins'))
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                    data-target="#editAdminModal" data-id="{{ $admin->id }}" data-username="{{ $admin->username }}"
+                                    data-name="{{ $admin->name }}" data-role="{{ $admin->role->id }}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            @endif
+                            @if (Auth::guard('admin')->user()->hasPermission('delete_admins'))
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#deleteAdminModal" data-id="{{ $admin->id }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            @endif
+                        </td>
+                    @endif
                 </tr>
             @empty
                 <tr>
@@ -77,10 +87,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="role">Role</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="Super Admin">Super Admin</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Read Only">Read Only</option>
+                        <select class="form-control" id="role" name="role_id" required>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -120,10 +130,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-role">Role</label>
-                        <select class="form-control" id="edit-role" name="role" required>
-                            <option value="Super Admin">Super Admin</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Read Only">Read Only</option>
+                        <select class="form-control" id="edit-role" name="role_id" required>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
