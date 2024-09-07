@@ -100,4 +100,47 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'There was an error exporting the orders. Please try again.');
         }
     }
+
+    public function apiCreate(Request $request)
+    {
+        try {
+            $request->validate([
+                'product_id' => 'required|exists:products,id',
+                'user_id' => 'required|exists:users,id',
+                'qty' => 'required|integer|min:1',
+                'total' => 'required|numeric',
+            ]);
+
+            $product = Product::findOrFail($request->product_id);
+
+            if ($product->qty < $request->qty) {
+                return response()->json(['error' => 'Insufficient product quantity'], 400);
+            }
+
+            $order = Order::create($request->all());
+
+            // Decrease the product quantity
+            $product->qty -= $request->qty;
+            $product->save();
+
+            return response()->json(['message' => 'Order created successfully'], 201);
+        } catch (\Exception $e) {
+            \Log::error('Error creating order: ' . $e->getMessage());
+            return response()->json(['error' => 'There was an error creating the order. Please try again.'], 500);
+        }
+    }
+
+    public function apiGetOrderHistory($user_id)
+    {
+        try {
+            $orders = Order::with(['product', 'user'])
+                ->where('user_id', $user_id)
+                ->get();
+
+            return response()->json(['data' => $orders], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching order history: ' . $e->getMessage());
+            return response()->json(['error' => 'There was an error fetching the order history. Please try again.'], 500);
+        }
+    }
 }

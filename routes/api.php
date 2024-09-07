@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// users
+Route::put('/users/{id}', [UserController::class, 'apiUpdate']);
+Route::get('/users/{id}', [UserController::class, 'apiGetDetail']);
+Route::post('/users', [UserController::class, 'apiCreate']);
+
+// products
+Route::get('/products', [ProductController::class, 'apiGetAll']);
+
+// orders
+Route::post('/orders', [OrderController::class, 'apiCreate']);
+Route::get('/orders/history/{user_id}', [OrderController::class, 'apiGetOrderHistory']);
+
+// login
+Route::post('/login', [UserController::class, 'apiLogin']);

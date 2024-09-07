@@ -35,18 +35,17 @@
                     @if (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->hasPermission('edit_users') || Auth::guard('admin')->user()->hasPermission('delete_users')))
                         <td>
                             @if (Auth::guard('admin')->user()->hasPermission('edit_users'))
-                                <a href="{{ route('users.update', $user->id) }}" class="btn btn-warning btn-sm">
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                    data-target="#editUserModal" data-id="{{ $user->id }}" data-username="{{ $user->username }}"
+                                    data-name="{{ $user->name }}">
                                     <i class="fas fa-edit"></i>
-                                </a>
+                                </button>
                             @endif
                             @if (Auth::guard('admin')->user()->hasPermission('delete_users'))
-                                <form action="{{ route('users.delete', $user->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#deleteUserModal" data-id="{{ $user->id }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             @endif
                         </td>
                     @endif

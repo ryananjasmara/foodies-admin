@@ -74,7 +74,7 @@ class ProductController extends Controller
             }
 
             $product->save();
-            
+
             return redirect()->route('products.list')->with('success', 'Product updated successfully.');
         } catch (ModelNotFoundException $e) {
             Log::error('Product not found: ' . $e->getMessage());
@@ -102,6 +102,24 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error deleting product: ' . $e->getMessage());
             return redirect()->route('products.list')->with('error', 'There was an error deleting the product. Please try again.');
+        }
+    }
+
+    public function apiGetAll(Request $request)
+    {
+        try {
+            $keyword = $request->input('keyword');
+
+            if ($keyword) {
+                $products = Product::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($keyword) . '%'])->orderBy('id', 'asc')->get();
+            } else {
+                $products = Product::orderBy('id', 'asc')->get();
+            }
+
+            return response()->json(['data' => $products]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching products: ' . $e->getMessage());
+            return response()->json(['error' => 'There was an error fetching the products. Please try again.'], 500);
         }
     }
 }
