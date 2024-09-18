@@ -111,9 +111,14 @@ class ProductController extends Controller
             $keyword = $request->input('keyword');
 
             if ($keyword) {
-                $products = Product::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($keyword) . '%'])->orderBy('id', 'asc')->get();
+                $products = Product::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($keyword) . '%'])
+                    ->orderByRaw('qty = 0')
+                    ->orderBy('id', 'asc')
+                    ->get();
             } else {
-                $products = Product::orderBy('id', 'asc')->get();
+                $products = Product::orderByRaw('qty = 0')
+                    ->orderBy('id', 'asc')
+                    ->get();
             }
 
             return response()->json(['data' => $products]);

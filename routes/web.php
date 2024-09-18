@@ -28,35 +28,34 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // admin routes
-    Route::get('/admins', [AdminController::class, 'index'])->name('admins.list');
-    Route::post('/admins', [AdminController::class, 'create'])->name('admins.create');
-    Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update');
-    Route::delete('/admins/{id}', [AdminController::class, 'delete'])->name('admins.delete');
+    Route::get('/admins', [AdminController::class, 'index'])->name('admins.list')->middleware('check.permission:view_admins');
+    Route::post('/admins', [AdminController::class, 'create'])->name('admins.create')->middleware('check.permission:create_admins');
+    Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update')->middleware('check.permission:edit_admins');
+    Route::delete('/admins/{id}', [AdminController::class, 'delete'])->name('admins.delete')->middleware('check.permission:delete_admins');
 
     // product routes
-    Route::get('/products', [ProductController::class, 'index'])->name('products.list');
-    Route::post('/products', [ProductController::class, 'create'])->name('products.create');
-    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('products.delete');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.list')->middleware('check.permission:view_products');
+    Route::post('/products', [ProductController::class, 'create'])->name('products.create')->middleware('check.permission:create_products');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware('check.permission:edit_products');
+    Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('products.delete')->middleware('check.permission:delete_products');
 
     // user routes
-    Route::get('/users', [UserController::class, 'index'])->name('users.list');
-    Route::post('/users', [UserController::class, 'create'])->name('users.create');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{id}', [UserController::class, 'delete'])->name('users.delete');
+    Route::get('/users', [UserController::class, 'index'])->name('users.list')->middleware('check.permission:view_users');
+    Route::post('/users', [UserController::class, 'create'])->name('users.create')->middleware('check.permission:create_users');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update')->middleware('check.permission:edit_users');
+    Route::delete('/users/{id}', [UserController::class, 'delete'])->name('users.delete')->middleware('check.permission:delete_users');
 
     // order routes
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.list');
-    Route::post('/orders', [OrderController::class, 'create'])->name('orders.create');
-    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/orders/{id}', [OrderController::class, 'delete'])->name('orders.delete');
-    Route::get('/orders/export', [OrderController::class, 'export'])->name('orders.export');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.list')->middleware('check.permission:view_orders');
+    Route::post('/orders', [OrderController::class, 'create'])->name('orders.create')->middleware('check.permission:create_orders');
+    Route::put('/orders/{id}', [OrderController::class, 'update'])->name('orders.update')->middleware('check.permission:edit_orders');
+    Route::delete('/orders/{id}', [OrderController::class, 'delete'])->name('orders.delete')->middleware('check.permission:delete_orders');
+    Route::get('/orders/export', [OrderController::class, 'export'])->name('orders.export')->middleware('check.permission:export_orders');
 
     // role routes
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.list');
-    Route::post('/roles', [RoleController::class, 'create'])->name('roles.create');
-    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
-    Route::delete('/roles/{id}', [RoleController::class, 'delete'])->name('roles.delete');
-    Route::get('roles/{id}/permissions', [RoleController::class, 'getPermissions'])->name('roles.permissions');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.list')->middleware('check.permission:view_roles');
+    Route::post('/roles', [RoleController::class, 'create'])->name('roles.create')->middleware('check.permission:create_roles');
+    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update')->middleware('check.permission:edit_roles');
+    Route::delete('/roles/{id}', [RoleController::class, 'delete'])->name('roles.delete')->middleware('check.permission:delete_roles');
+    Route::get('roles/{id}/permissions', [RoleController::class, 'getPermissions'])->name('roles.permissions')->middleware('check.permission:edit_roles');
 });
-
